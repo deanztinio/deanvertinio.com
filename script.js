@@ -181,6 +181,45 @@ async function updateClientItems() {
     }
 }
 
+// Function to update work items with metadata
+async function updateWorkItems() {
+    const workItems = document.querySelectorAll('.work-item');
+    
+    for (const item of workItems) {
+        try {
+            const link = item.querySelector('a');
+            const videoId = getVideoId(link.href);
+            
+            if (videoId) {
+                const metadata = await fetchVideoMetadata(videoId);
+                if (metadata) {
+                    // Update title
+                    const title = item.querySelector('h3');
+                    if (title) {
+                        title.textContent = metadata.title;
+                    }
+                    
+                    // Update description with view count
+                    const description = item.querySelector('p');
+                    if (description) {
+                        const formattedViews = formatNumber(metadata.viewCount);
+                        description.textContent = `${formattedViews} views`;
+                    }
+                    
+                    // Update thumbnail if needed
+                    const img = item.querySelector('img');
+                    if (img && metadata.thumbnail) {
+                        img.src = metadata.thumbnail;
+                        img.alt = metadata.title;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error updating work item:', error);
+        }
+    }
+}
+
 // Add tooltip styles
 const style = document.createElement('style');
 style.textContent = `
@@ -251,4 +290,5 @@ document.head.appendChild(style);
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     updateClientItems();
+    updateWorkItems();
 }); 
