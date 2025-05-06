@@ -147,7 +147,7 @@ body {
 }
 
 .client {
-    padding: calc(var(--spacing-unit) * 8) 0;
+    padding: calc(var(--spacing-unit) * 8) calc(var(--spacing-unit) * 3);
     width: 100%;
     overflow: visible;
     position: relative;
@@ -168,12 +168,15 @@ body {
     animation: fadeInUp 1s var(--transition-timing) 0.7s forwards;
     justify-content: flex-start;
     overflow-x: auto;
-    padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+    padding: calc(var(--spacing-unit) * 2) 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
     width: 100%;
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
+    margin: 0 calc(var(--spacing-unit) * -3);
+    padding-left: calc(var(--spacing-unit) * 3);
+    padding-right: calc(var(--spacing-unit) * 3);
 }
 
 .client-grid::-webkit-scrollbar {
@@ -186,25 +189,20 @@ body {
     align-items: center;
     text-align: center;
     transition: all 0.3s var(--transition-timing);
-    min-width: 120px;
-    padding: calc(var(--spacing-unit) * 1.5);
+    min-width: 110px;
+    padding: calc(var(--spacing-unit) * 1);
     flex: 0 0 auto;
-    margin-right: calc(var(--spacing-unit) * 1);
-}
-
-.client-item:hover {
-    transform: translateY(-5px);
 }
 
 .client-logo {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     background-color: var(--accent-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    margin-bottom: calc(var(--spacing-unit) * 1);
     transition: all 0.3s var(--transition-timing);
     overflow: hidden;
     padding: 0;
@@ -236,11 +234,11 @@ body {
     align-items: center;
     gap: calc(var(--spacing-unit) * 0.5);
     width: 100%;
-    min-width: 120px;
+    min-width: 110px;
 }
 
 .client-name {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     color: var(--text-color);
     text-transform: uppercase;
@@ -471,16 +469,13 @@ footer {
     }
     
     .client {
-        padding: calc(var(--spacing-unit) * 6) 0;
-    }
-
-    .client h2 {
-        font-size: 2rem;
-        margin-bottom: calc(var(--spacing-unit) * 3);
+        padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 2);
     }
 
     .client-grid {
-        padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 2);
+        margin: 0 calc(var(--spacing-unit) * -2);
+        padding-left: calc(var(--spacing-unit) * 2);
+        padding-right: calc(var(--spacing-unit) * 2);
         gap: calc(var(--spacing-unit) * 1.5);
     }
 
@@ -489,35 +484,24 @@ footer {
     }
     
     .client-logo {
-        width: 70px;
-        height: 70px;
+        width: 65px;
+        height: 65px;
     }
     
     .client-info {
         min-width: 100px;
     }
-    
-    .client-name {
-        font-size: 12px;
-    }
-    
-    .subscriber-count {
-        font-size: 10px;
-    }
 }
 
 @media (max-width: 480px) {
     .client {
-        padding: calc(var(--spacing-unit) * 4) 0;
-    }
-
-    .client h2 {
-        font-size: 1.75rem;
-        margin-bottom: calc(var(--spacing-unit) * 2);
+        padding: calc(var(--spacing-unit) * 4) var(--spacing-unit);
     }
 
     .client-grid {
-        padding: calc(var(--spacing-unit) * 2) var(--spacing-unit);
+        margin: 0 calc(var(--spacing-unit) * -1);
+        padding-left: var(--spacing-unit);
+        padding-right: var(--spacing-unit);
         gap: calc(var(--spacing-unit));
     }
 
