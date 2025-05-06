@@ -304,8 +304,53 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// Function to test API key
+async function testAPIKey() {
+    try {
+        console.log('Testing YouTube API key...');
+        const testVideoId = 'dQw4w9WgXcQ'; // A known working video ID
+        const url = `${API_URL}/videos?part=snippet&id=${testVideoId}&key=${API_KEY}`;
+        console.log('Test API Request URL:', url);
+        
+        const response = await fetch(url);
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Test API Response:', data);
+        
+        if (data.error) {
+            console.error('API Key Error:', {
+                code: data.error.code,
+                message: data.error.message,
+                errors: data.error.errors
+            });
+            return false;
+        }
+        
+        if (data.items && data.items.length > 0) {
+            console.log('API Key is working! Test video title:', data.items[0].snippet.title);
+            return true;
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('API Key Test Failed:', error);
+        return false;
+    }
+}
+
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const isAPIWorking = await testAPIKey();
+    if (!isAPIWorking) {
+        console.error('YouTube API is not working. Please check your API key and permissions.');
+        return;
+    }
+    
     updateClientItems();
     updateWorkItems();
 }); 
