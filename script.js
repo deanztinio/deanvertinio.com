@@ -168,27 +168,8 @@ async function updateClientItems() {
             const count = item.querySelector('.subscriber-count');
             
             if (name && count) {
-                // Get channel ID from the name
-                const channelName = name.textContent.toLowerCase();
-                const searchResponse = await fetch(
-                    `${API_URL}?part=snippet&q=${channelName}&type=channel&maxResults=1&key=${API_KEY}`
-                );
-                const searchData = await searchResponse.json();
-                
-                if (searchData.items && searchData.items.length > 0) {
-                    const channelId = searchData.items[0].id.channelId;
-                    const metadata = await fetchChannelMetadata(channelId);
-                    
-                    if (metadata) {
-                        // Update channel name
-                        name.textContent = metadata.title;
-                        
-                        // Update subscriber count
-                        const formattedSubs = formatNumber(metadata.subscriberCount);
-                        count.textContent = `${formattedSubs} subscribers`;
-                        count.classList.add('animate');
-                    }
-                }
+                // Add animation class for subscriber count
+                count.classList.add('animate');
             }
         } catch (error) {
             console.error('Error updating client item:', error);
