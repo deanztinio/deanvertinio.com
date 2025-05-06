@@ -136,67 +136,52 @@ async function updateClientItems() {
     const loadingStates = new Map();
     
     for (const item of clientItems) {
-        // Add loading state
-        const loadingDiv = document.createElement('div');
-        loadingDiv.className = 'loading-state';
-        loadingDiv.innerHTML = '<div class="loading-spinner"></div>';
-        item.appendChild(loadingDiv);
-        loadingStates.set(item, loadingDiv);
-        
         try {
-            const link = item.querySelector('a');
-            const videoId = getVideoId(link.href);
+            const name = item.querySelector('.client-name');
+            const count = item.querySelector('.subscriber-count');
             
-            if (videoId) {
-                const metadata = await fetchVideoMetadata(videoId);
-                if (metadata) {
-                    // Update thumbnail
-                    const logo = item.querySelector('.client-logo img');
-                    if (logo) {
-                        logo.src = metadata.thumbnail;
-                        logo.alt = metadata.title;
+            if (name && count) {
+                // Create a tooltip for view count
+                const tooltip = document.createElement('div');
+                tooltip.className = 'view-count-tooltip';
+                tooltip.style.display = 'none';
+                item.appendChild(tooltip);
+                
+                // Add hover event listeners
+                item.addEventListener('mouseenter', async () => {
+                    const channelName = name.textContent.toLowerCase();
+                    try {
+                        // Search for the channel's most recent video
+                        const searchResponse = await fetch(
+                            `${API_URL}?part=snippet&q=${channelName}&type=video&maxResults=1&key=${API_KEY}`
+                        );
+                        const searchData = await searchResponse.json();
+                        
+                        if (searchData.items && searchData.items.length > 0) {
+                            const videoId = searchData.items[0].id.videoId;
+                            const metadata = await fetchVideoMetadata(videoId);
+                            
+                            if (metadata) {
+                                tooltip.textContent = `${formatNumber(metadata.viewCount)} views`;
+                                tooltip.style.display = 'block';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error fetching view count:', error);
                     }
-                    
-                    // Update title
-                    const name = item.querySelector('.client-name');
-                    if (name) {
-                        // Truncate title if too long
-                        const maxLength = 30;
-                        const title = metadata.title.length > maxLength 
-                            ? metadata.title.substring(0, maxLength) + '...' 
-                            : metadata.title;
-                        name.textContent = title;
-                    }
-                    
-                    // Update view count and subscriber count
-                    const count = item.querySelector('.subscriber-count');
-                    if (count) {
-                        const formattedViews = formatNumber(metadata.viewCount);
-                        const formattedSubs = formatNumber(metadata.subscriberCount);
-                        count.textContent = `${formattedViews} views • ${formattedSubs} subscribers`;
-                        count.classList.add('animate');
-                    }
-                }
+                });
+                
+                item.addEventListener('mouseleave', () => {
+                    tooltip.style.display = 'none';
+                });
             }
         } catch (error) {
             console.error('Error updating item:', error);
-            // Show error state
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-state';
-            errorDiv.textContent = 'Failed to load data';
-            item.appendChild(errorDiv);
-        } finally {
-            // Remove loading state
-            const loadingState = loadingStates.get(item);
-            if (loadingState) {
-                loadingState.remove();
-                loadingStates.delete(item);
-            }
         }
     }
 }
 
-// Add loading spinner styles
+// Add tooltip styles
 const style = document.createElement('style');
 style.textContent = `
     .loading-state {
@@ -229,6 +214,20 @@ style.textContent = `
         color: #e74c3c;
         font-size: 12px;
         text-align: center;
+    }
+    
+    .view-count-tooltip {
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 1000;
     }
     
     .client-name {
