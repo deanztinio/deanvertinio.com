@@ -130,10 +130,30 @@ async function fetchVideoMetadata(videoId, retries = 3) {
     return null;
 }
 
+// Function to fetch channel metadata
+async function fetchChannelMetadata(channelId) {
+    try {
+        const response = await fetch(`${API_URL}?part=snippet,statistics&id=${channelId}&key=${API_KEY}`);
+        const data = await response.json();
+        
+        if (data.items && data.items.length > 0) {
+            const channel = data.items[0];
+            return {
+                title: channel.snippet.title,
+                subscriberCount: parseInt(channel.statistics.subscriberCount),
+                viewCount: parseInt(channel.statistics.viewCount)
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Error fetching channel metadata:', error);
+        return null;
+    }
+}
+
 // Function to update client items with metadata
 async function updateClientItems() {
     const clientItems = document.querySelectorAll('.client-item');
-    const loadingStates = new Map();
     
     for (const item of clientItems) {
         try {
@@ -141,42 +161,30 @@ async function updateClientItems() {
             const count = item.querySelector('.subscriber-count');
             
             if (name && count) {
-                // Create a tooltip for view count
-                const tooltip = document.createElement('div');
-                tooltip.className = 'view-count-tooltip';
-                tooltip.style.display = 'none';
-                item.appendChild(tooltip);
+                // Get channel ID from the name
+                const channelName = name.textContent.toLowerCase();
+                const searchResponse = await fetch(
+                    `${API_URL}?part=snippet&q=${channelName}&type=channel&maxResults=1&key=${API_KEY}`
+                );
+                const searchData = await searchResponse.json();
                 
-                // Add hover event listeners
-                item.addEventListener('mouseenter', async () => {
-                    const channelName = name.textContent.toLowerCase();
-                    try {
-                        // Search for the channel's most recent video
-                        const searchResponse = await fetch(
-                            `${API_URL}?part=snippet&q=${channelName}&type=video&maxResults=1&key=${API_KEY}`
-                        );
-                        const searchData = await searchResponse.json();
+                if (searchData.items && searchData.items.length > 0) {
+                    const channelId = searchData.items[0].id.channelId;
+                    const metadata = await fetchChannelMetadata(channelId);
+                    
+                    if (metadata) {
+                        // Update channel name
+                        name.textContent = metadata.title;
                         
-                        if (searchData.items && searchData.items.length > 0) {
-                            const videoId = searchData.items[0].id.videoId;
-                            const metadata = await fetchVideoMetadata(videoId);
-                            
-                            if (metadata) {
-                                tooltip.textContent = `${formatNumber(metadata.viewCount)} views`;
-                                tooltip.style.display = 'block';
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error fetching view count:', error);
+                        // Update subscriber count
+                        const formattedSubs = formatNumber(metadata.subscriberCount);
+                        count.textContent = `${formattedSubs} subscribers`;
+                        count.classList.add('animate');
                     }
-                });
-                
-                item.addEventListener('mouseleave', () => {
-                    tooltip.style.display = 'none';
-                });
+                }
             }
         } catch (error) {
-            console.error('Error updating item:', error);
+            console.error('Error updating client item:', error);
         }
     }
 }
@@ -193,10 +201,12 @@ async function updateWorkItems() {
             if (videoId) {
                 const metadata = await fetchVideoMetadata(videoId);
                 if (metadata) {
-                    // Update title
+                    // Update title with channel name and video title
                     const title = item.querySelector('h3');
                     if (title) {
-                        title.textContent = metadata.title;
+                        const channelName = metadata.title;
+                        const videoTitle = metadata.title;
+                        title.textContent = `${channelName} - ${videoTitle}`;
                     }
                     
                     // Update description with view count
