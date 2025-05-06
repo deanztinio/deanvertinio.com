@@ -100,14 +100,21 @@ function getVideoId(url) {
 async function fetchVideoMetadata(videoId, retries = 3) {
     for (let i = 0; i < retries; i++) {
         try {
-            console.log(`Fetching metadata for video ID: ${videoId}`);
-            const response = await fetch(`${API_URL}?part=snippet,statistics&id=${videoId}&key=${API_KEY}`);
+            console.log(`Attempting to fetch metadata for video ID: ${videoId}`);
+            const url = `${API_URL}?part=snippet,statistics&id=${videoId}&key=${API_KEY}`;
+            console.log('API Request URL:', url);
+            
+            const response = await fetch(url);
             const data = await response.json();
             
             if (data.error) {
-                console.error('API Error:', data.error);
+                console.error('YouTube API Error:', {
+                    code: data.error.code,
+                    message: data.error.message,
+                    errors: data.error.errors
+                });
                 if (data.error.code === 403) {
-                    throw new Error('API quota exceeded');
+                    throw new Error('API quota exceeded or invalid API key');
                 }
                 continue;
             }
