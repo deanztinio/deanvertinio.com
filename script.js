@@ -86,7 +86,7 @@ function initSubscriberCounts() {
 document.addEventListener('DOMContentLoaded', initSubscriberCounts);
 
 // YouTube Data API configuration
-const API_KEY = 'AIzaSyDoWvXvFNpc9MwkrFU9EjFN4fVZlv3KsiM';
+const API_KEY = 'AIzaSyDTPfkdq61eG8sMPxC6gJkD39y6Xq4AJxw';
 const API_URL = 'https://www.googleapis.com/youtube/v3/videos';
 
 // Function to extract video ID from YouTube URL
@@ -100,6 +100,7 @@ function getVideoId(url) {
 async function fetchVideoMetadata(videoId, retries = 3) {
     for (let i = 0; i < retries; i++) {
         try {
+            console.log(`Fetching metadata for video ID: ${videoId}`);
             const response = await fetch(`${API_URL}?part=snippet,statistics&id=${videoId}&key=${API_KEY}`);
             const data = await response.json();
             
@@ -113,18 +114,24 @@ async function fetchVideoMetadata(videoId, retries = 3) {
             
             if (data.items && data.items.length > 0) {
                 const video = data.items[0];
+                console.log('Successfully fetched video metadata:', {
+                    title: video.snippet.title,
+                    viewCount: video.statistics.viewCount,
+                    channelTitle: video.snippet.channelTitle
+                });
                 return {
                     title: video.snippet.title,
                     thumbnail: video.snippet.thumbnails.maxresdefault?.url || video.snippet.thumbnails.high?.url,
                     viewCount: parseInt(video.statistics.viewCount),
-                    subscriberCount: parseInt(video.statistics.subscriberCount)
+                    channelTitle: video.snippet.channelTitle
                 };
             }
+            console.log('No video data found for ID:', videoId);
             return null;
         } catch (error) {
             console.error(`Attempt ${i + 1} failed:`, error);
             if (i === retries - 1) throw error;
-            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Exponential backoff
+            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
         }
     }
     return null;
