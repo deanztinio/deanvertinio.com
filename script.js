@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', initSubscriberCounts);
 
 // YouTube Data API configuration
 const API_KEY = 'AIzaSyDTPfkdq61eG8sMPxC6gJkD39y6Xq4AJxw';
-const API_URL = 'https://www.googleapis.com/youtube/v3/videos';
+const API_URL = 'https://www.googleapis.com/youtube/v3';
 
 // Function to extract video ID from YouTube URL
 function getVideoId(url) {
@@ -101,11 +101,16 @@ async function fetchVideoMetadata(videoId, retries = 3) {
     for (let i = 0; i < retries; i++) {
         try {
             console.log(`Attempting to fetch metadata for video ID: ${videoId}`);
-            const url = `${API_URL}?part=snippet,statistics&id=${videoId}&key=${API_KEY}`;
+            const url = `${API_URL}/videos?part=snippet,statistics&id=${videoId}&key=${API_KEY}`;
             console.log('API Request URL:', url);
             
             const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
+            console.log('API Response:', data);
             
             if (data.error) {
                 console.error('YouTube API Error:', {
@@ -187,6 +192,7 @@ async function updateClientItems() {
 // Function to update work items with metadata
 async function updateWorkItems() {
     const workItems = document.querySelectorAll('.work-item');
+    console.log(`Found ${workItems.length} work items to update`);
     
     for (const item of workItems) {
         try {
@@ -194,14 +200,14 @@ async function updateWorkItems() {
             const videoId = getVideoId(link.href);
             
             if (videoId) {
+                console.log(`Processing work item with video ID: ${videoId}`);
                 const metadata = await fetchVideoMetadata(videoId);
                 if (metadata) {
-                    // Update title with channel name and video title
+                    // Update title
                     const title = item.querySelector('h3');
                     if (title) {
-                        const channelName = metadata.title;
-                        const videoTitle = metadata.title;
-                        title.textContent = `${channelName} - ${videoTitle}`;
+                        title.textContent = `${metadata.channelTitle} - ${metadata.title}`;
+                        console.log(`Updated title to: ${title.textContent}`);
                     }
                     
                     // Update description with view count
@@ -209,6 +215,7 @@ async function updateWorkItems() {
                     if (description) {
                         const formattedViews = formatNumber(metadata.viewCount);
                         description.textContent = `${formattedViews} views`;
+                        console.log(`Updated view count to: ${description.textContent}`);
                     }
                     
                     // Update thumbnail if needed
@@ -216,8 +223,13 @@ async function updateWorkItems() {
                     if (img && metadata.thumbnail) {
                         img.src = metadata.thumbnail;
                         img.alt = metadata.title;
+                        console.log(`Updated thumbnail for: ${metadata.title}`);
                     }
+                } else {
+                    console.log(`No metadata found for video ID: ${videoId}`);
                 }
+            } else {
+                console.log('No video ID found in link:', link.href);
             }
         } catch (error) {
             console.error('Error updating work item:', error);
