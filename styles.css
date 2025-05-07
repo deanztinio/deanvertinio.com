@@ -182,6 +182,9 @@ body {
     transition: all 0.3s var(--transition-timing);
     position: relative;
     overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .client-logo {
@@ -236,10 +239,15 @@ body {
 .client-item:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .client-item:hover .subscriber-count {
     color: var(--hover-color);
+}
+
+.client-item:hover .client-name {
+    color: var(--primary-color);
 }
 
 /* Work Section */
@@ -262,6 +270,10 @@ body {
     cursor: pointer;
     transition: all 0.5s var(--transition-timing);
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: inherit;
+    display: block;
 }
 
 .work-item::before {
@@ -272,13 +284,13 @@ body {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0);
-    transition: background 0.3s var(--transition-timing);
+    transition: all 0.3s var(--transition-timing);
     z-index: 1;
 }
 
 .work-item:hover {
     transform: scale(1.02);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3), 0 0 40px rgba(255, 0, 0, 0.2);
 }
 
 .work-item:hover::before {
@@ -304,12 +316,11 @@ body {
     color: #ffffff;
     padding: calc(var(--spacing-unit) * 1.5);
     background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-    text-decoration: none;
     z-index: 2;
 }
 
 .video-placeholder h3 {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     margin-bottom: calc(var(--spacing-unit) * 0.25);
     color: #ffffff;
@@ -317,7 +328,7 @@ body {
 }
 
 .video-placeholder p {
-    font-size: 11px;
+    font-size: 10px;
     color: rgba(255, 255, 255, 0.7);
 }
 
