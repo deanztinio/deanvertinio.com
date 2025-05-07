@@ -227,6 +227,10 @@ body {
     opacity: 1;
     transform: none;
     animation: none;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .client-item:hover {
@@ -446,7 +450,7 @@ footer {
     }
     
     .subscriber-count {
-        font-size: 11px;
+        width: 80px;
     }
 }
 
@@ -474,6 +478,6 @@ footer {
     }
     
     .subscriber-count {
-        font-size: 10px;
+        width: 70px;
     }
 } 
