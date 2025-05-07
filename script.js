@@ -44,7 +44,7 @@ function animateValue(element, start, end, duration) {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const current = Math.floor(progress * (end - start) + start);
-        element.textContent = formatNumber(current) + ' SUBSCRIBER';
+        element.textContent = formatNumber(current) + ' SUBS';
         if (progress < 1) {
             window.requestAnimationFrame(step);
         }
@@ -72,7 +72,7 @@ function initSubscriberCounts() {
         const finalValue = number * (unit === 'M' ? 1000000 : unit === 'K' ? 1000 : 1);
         
         // Reset the element
-        element.textContent = '0 SUBSCRIBER';
+        element.textContent = '0 SUBS';
         element.classList.add('animate');
         
         // Start animation after a small delay
