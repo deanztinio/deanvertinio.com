@@ -88,9 +88,10 @@ const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 
 // Function to extract video ID from YouTube URL
 function getVideoId(url) {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    // Handles youtu.be/VIDEOID and youtube.com/watch?v=VIDEOID and other formats
+    const regExp = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]{11})/;
     const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+    return match ? match[1] : null;
 }
 
 // Function to fetch video details from YouTube API
