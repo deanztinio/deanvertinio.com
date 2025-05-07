@@ -353,7 +353,7 @@ body {
 /* About Section */
 .about {
     padding: calc(var(--spacing-unit) * 12) calc(var(--spacing-unit) * 3);
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     opacity: 0;
     animation: fadeInUp 1s var(--transition-timing) 0.9s forwards;
@@ -368,6 +368,11 @@ body {
 .about p {
     font-size: 18px;
     color: var(--secondary-color);
+    margin-bottom: calc(var(--spacing-unit) * 4);
+    line-height: 1.6;
+}
+
+.about p:last-of-type {
     margin-bottom: calc(var(--spacing-unit) * 6);
 }
 
@@ -383,11 +388,15 @@ body {
     color: var(--secondary-color);
     transition: all 0.3s var(--transition-timing);
     cursor: pointer;
+    padding: calc(var(--spacing-unit)) calc(var(--spacing-unit) * 2);
+    background: var(--accent-color);
+    border-radius: 6px;
 }
 
 .skills li:hover {
     color: var(--primary-color);
     transform: translateY(-2px);
+    background: #eaeaea;
 }
 
 /* Footer */
