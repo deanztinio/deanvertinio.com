@@ -180,6 +180,8 @@ body {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     transition: all 0.3s var(--transition-timing);
+    position: relative;
+    overflow: hidden;
 }
 
 .client-logo {
@@ -188,12 +190,14 @@ body {
     border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
+    background: #f5f5f7;
 }
 
 .client-logo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
 .client-info {
@@ -201,6 +205,7 @@ body {
     flex-direction: column;
     gap: 2px;
     min-width: 0;
+    flex: 1;
 }
 
 .client-name {
@@ -215,6 +220,25 @@ body {
 .subscriber-count {
     font-size: 12px;
     color: var(--secondary-color);
+    opacity: 0;
+    animation: fadeInUp 0.5s var(--transition-timing) forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.client-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
 .client-item:hover .subscriber-count {
