@@ -82,7 +82,96 @@ function initSubscriberCounts() {
     });
 }
 
-// Initialize when the page loads
+// YouTube API Configuration
+const YOUTUBE_API_KEY = 'AIzaSyDTPfkdq61eG8sMPxC6gJkD39y6Xq4AJxw';
+const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
+
+// Function to extract video ID from YouTube URL
+function getVideoId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
+// Function to fetch video details from YouTube API
+async function fetchVideoDetails(videoUrl) {
+    const videoId = getVideoId(videoUrl);
+    if (!videoId) return null;
+
+    try {
+        const response = await fetch(`${YOUTUBE_API_URL}/videos?part=snippet&id=${videoId}&key=${YOUTUBE_API_KEY}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.items[0]?.snippet;
+    } catch (error) {
+        console.error('Error fetching video details:', error);
+        return null;
+    }
+}
+
+// Function to update video titles
+async function updateVideoTitles() {
+    const videoLinks = document.querySelectorAll('.video-placeholder');
+    
+    for (const link of videoLinks) {
+        const videoUrl = link.href;
+        const titleElement = link.querySelector('h3');
+        const descriptionElement = link.querySelector('p');
+        
+        // Set loading state
+        titleElement.textContent = 'Loading...';
+        descriptionElement.textContent = 'Loading...';
+        
+        const videoDetails = await fetchVideoDetails(videoUrl);
+        if (videoDetails) {
+            titleElement.textContent = videoDetails.title;
+            descriptionElement.textContent = videoDetails.channelTitle;
+        } else {
+            titleElement.textContent = 'Video Title Unavailable';
+            descriptionElement.textContent = 'YouTube Video';
+        }
+    }
+}
+
+// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize subscriber count animations
     initSubscriberCounts();
+    
+    // Update video titles
+    updateVideoTitles();
+    
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Navbar background change on scroll
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Animate skills on scroll
+    const skills = document.querySelectorAll('.skills li');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate');
+            }
+        });
+    }, { threshold: 0.5 });
+
+    skills.forEach(skill => observer.observe(skill));
 }); 
