@@ -124,12 +124,15 @@ function formatViewCount(views) {
 
 // Function to update video titles
 async function updateVideoTitles() {
-    const videoLinks = document.querySelectorAll('.video-placeholder');
+    // Select all .work-item links
+    const workItems = document.querySelectorAll('.work-item');
     
-    for (const link of videoLinks) {
-        const videoUrl = link.href;
-        const titleElement = link.querySelector('h3');
-        const descriptionElement = link.querySelector('p');
+    for (const item of workItems) {
+        const videoUrl = item.href;
+        const placeholder = item.querySelector('.video-placeholder');
+        if (!placeholder) continue;
+        const titleElement = placeholder.querySelector('h3');
+        const descriptionElement = placeholder.querySelector('p');
         
         // Set loading state
         titleElement.textContent = 'Loading...';
