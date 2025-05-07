@@ -302,22 +302,23 @@ body {
     left: 0;
     right: 0;
     color: #ffffff;
-    padding: calc(var(--spacing-unit) * 2);
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    padding: calc(var(--spacing-unit) * 1.5);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
     text-decoration: none;
     z-index: 2;
 }
 
 .video-placeholder h3 {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
-    margin-bottom: calc(var(--spacing-unit) * 0.5);
+    margin-bottom: calc(var(--spacing-unit) * 0.25);
     color: #ffffff;
+    opacity: 0.9;
 }
 
 .video-placeholder p {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .video-number {
@@ -330,6 +331,14 @@ body {
 
 .work-item:hover .video-number {
     color: #ffffff;
+}
+
+.work-item:hover .video-placeholder h3 {
+    opacity: 1;
+}
+
+.work-item:hover .video-placeholder p {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 /* About Section */
