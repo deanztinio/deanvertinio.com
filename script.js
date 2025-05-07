@@ -99,16 +99,27 @@ async function fetchVideoDetails(videoUrl) {
     if (!videoId) return null;
 
     try {
-        const response = await fetch(`${YOUTUBE_API_URL}/videos?part=snippet&id=${videoId}&key=${YOUTUBE_API_KEY}`);
+        const response = await fetch(`${YOUTUBE_API_URL}/videos?part=snippet,statistics&id=${videoId}&key=${YOUTUBE_API_KEY}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        return data.items[0]?.snippet;
+        return data.items[0];
     } catch (error) {
         console.error('Error fetching video details:', error);
         return null;
     }
+}
+
+// Function to format view count
+function formatViewCount(views) {
+    if (views >= 1000000) {
+        return (views / 1000000).toFixed(1) + 'M views';
+    }
+    if (views >= 1000) {
+        return (views / 1000).toFixed(1) + 'K views';
+    }
+    return views + ' views';
 }
 
 // Function to update video titles
@@ -126,8 +137,9 @@ async function updateVideoTitles() {
         
         const videoDetails = await fetchVideoDetails(videoUrl);
         if (videoDetails) {
-            titleElement.textContent = videoDetails.title;
-            descriptionElement.textContent = videoDetails.channelTitle;
+            titleElement.textContent = videoDetails.snippet.title;
+            const viewCount = formatViewCount(parseInt(videoDetails.statistics.viewCount));
+            descriptionElement.textContent = `${videoDetails.snippet.channelTitle} • ${viewCount}`;
         } else {
             titleElement.textContent = 'Video Title Unavailable';
             descriptionElement.textContent = 'YouTube Video';
