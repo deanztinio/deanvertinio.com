@@ -163,25 +163,28 @@ body {
 
 .client-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: calc(var(--spacing-unit) * 2);
+    grid-template-columns: repeat(5, 1fr);
+    gap: calc(var(--spacing-unit) * 1.5);
     margin-top: calc(var(--spacing-unit) * 4);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .client-item {
     display: flex;
     align-items: center;
-    gap: calc(var(--spacing-unit) * 1.5);
-    padding: calc(var(--spacing-unit) * 1.5);
+    gap: calc(var(--spacing-unit));
+    padding: calc(var(--spacing-unit));
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-radius: 8px;
     transition: all 0.3s var(--transition-timing);
 }
 
 .client-logo {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
     overflow: hidden;
 }
 
@@ -194,17 +197,17 @@ body {
 .client-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .client-name {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: #ffffff;
 }
 
 .subscriber-count {
-    font-size: 12px;
+    font-size: 10px;
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -384,13 +387,13 @@ footer {
 
 @media (max-width: 1200px) {
     .work-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
 @media (max-width: 900px) {
     .work-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -408,23 +411,25 @@ footer {
     }
 
     .client-grid {
-        margin: 0 calc(var(--spacing-unit) * -2);
-        padding-left: calc(var(--spacing-unit) * 2);
-        padding-right: calc(var(--spacing-unit) * 2);
-        gap: calc(var(--spacing-unit) * 1.5);
+        grid-template-columns: repeat(2, 1fr);
+        gap: calc(var(--spacing-unit));
     }
-
+    
     .client-item {
-        min-width: 100px;
+        padding: calc(var(--spacing-unit) * 0.75);
     }
     
     .client-logo {
-        width: 65px;
-        height: 65px;
+        width: 36px;
+        height: 36px;
     }
     
-    .client-info {
-        min-width: 100px;
+    .client-name {
+        font-size: 11px;
+    }
+    
+    .subscriber-count {
+        font-size: 9px;
     }
 }
 
@@ -434,23 +439,17 @@ footer {
     }
 
     .client-grid {
-        margin: 0 calc(var(--spacing-unit) * -1);
-        padding-left: var(--spacing-unit);
-        padding-right: var(--spacing-unit);
-        gap: calc(var(--spacing-unit));
+        grid-template-columns: repeat(2, 1fr);
+        gap: calc(var(--spacing-unit) * 0.75);
     }
-
+    
     .client-item {
-        min-width: 90px;
+        padding: calc(var(--spacing-unit) * 0.5);
     }
     
     .client-logo {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .client-info {
-        min-width: 90px;
+        width: 32px;
+        height: 32px;
     }
     
     .client-name {
