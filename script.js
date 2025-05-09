@@ -190,4 +190,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.5 });
 
     skills.forEach(skill => observer.observe(skill));
+
+    const workItems = document.querySelectorAll('.work-item');
+    
+    // Function to get random delay between 0 and 0.8 seconds (even faster)
+    const getRandomDelay = () => Math.random() * 800;
+    
+    // Set initial state
+    workItems.forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'scale(0.7) translateY(40px)';
+        item.style.transition = 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)'; // bouncy easing
+    });
+    
+    // Animate items with random delays
+    workItems.forEach(item => {
+        setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'scale(1) translateY(0)';
+            
+            // Add hover effect
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'scale(1.08) translateY(-8px)';
+                item.style.transition = 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'scale(1) translateY(0)';
+                item.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+        }, getRandomDelay());
+    });
 }); 
