@@ -1,10 +1,13 @@
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
+        const targetSelector = this.getAttribute('href');
+        if (!targetSelector || targetSelector === '#') return;
+        const target = document.querySelector(targetSelector);
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
     });
 });
 
@@ -162,10 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+            const targetSelector = this.getAttribute('href');
+            if (!targetSelector || targetSelector === '#') return;
+            const target = document.querySelector(targetSelector);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
         });
     });
 
