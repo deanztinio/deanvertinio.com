@@ -22,7 +22,7 @@ body {
     color: #f8f8f8;
     background-color: var(--background-color);
     opacity: 0;
-    animation: fadeIn 0.8s var(--transition-timing) forwards, moveGradient 18s linear infinite alternate;
+    animation: fadeIn 0.8s var(--transition-timing) forwards;
     background: radial-gradient(ellipse at 20% 50%, #3b0a33 0%, #6e2a3a 60%, #ffd95a 100%);
     background-size: 300% 300%;
     background-position: 0% 50%;

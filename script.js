@@ -244,4 +244,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Animate radial gradient background
+    (function animateRadialGradient() {
+        let angle = 0;
+        setInterval(() => {
+            angle += 0.008;
+            const x = 50 + 30 * Math.cos(angle); // center x% (moves in a circle)
+            const y = 50 + 30 * Math.sin(angle); // center y%
+            document.body.style.background = `radial-gradient(ellipse at ${x}% ${y}%, #3b0a33 0%, #6e2a3a 60%, #ffd95a 100%)`;
+        }, 30);
+    })();
 }); 
