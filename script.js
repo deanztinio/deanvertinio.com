@@ -227,4 +227,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, getRandomDelay());
     });
+
+    // Add click event to work items to only open in new tab and scroll, not update the portfolio player
+    const portfolioSection = document.querySelector('.portfolio-video');
+    workItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href) {
+                e.preventDefault();
+                // Scroll to portfolio section
+                if (portfolioSection) {
+                    portfolioSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                // Open in new tab
+                window.open(href, '_blank');
+            }
+        });
+    });
 }); 
