@@ -67,18 +67,15 @@ function formatNumber(num) {
 
 function initSubscriberCounts() {
     const subscriberElements = document.querySelectorAll('.subscriber-count');
-    
     subscriberElements.forEach(element => {
+        // Skip if this will be updated by the API
+        if (element.hasAttribute('data-channel-id')) return;
         const text = element.textContent;
         const number = parseFloat(text);
         const unit = text.includes('M') ? 'M' : text.includes('K') ? 'K' : '';
         const finalValue = number * (unit === 'M' ? 1000000 : unit === 'K' ? 1000 : 1);
-        
-        // Reset the element
         element.textContent = '0 SUBS';
         element.classList.add('animate');
-        
-        // Start animation after a small delay
         setTimeout(() => {
             animateValue(element, 0, finalValue, 3000);
         }, 100);
