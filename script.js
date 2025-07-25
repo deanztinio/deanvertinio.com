@@ -127,18 +127,15 @@ function formatViewCount(views) {
 async function updateVideoTitles() {
     // Select all .work-item links
     const workItems = document.querySelectorAll('.work-item');
-    
     for (const item of workItems) {
         const videoUrl = item.href;
         const placeholder = item.querySelector('.video-placeholder');
         if (!placeholder) continue;
         const titleElement = placeholder.querySelector('h3');
         const descriptionElement = placeholder.querySelector('p');
-        
         // Set loading state
         titleElement.textContent = 'Loading...';
         descriptionElement.textContent = 'Loading...';
-        
         const videoDetails = await fetchVideoDetails(videoUrl);
         if (videoDetails) {
             titleElement.textContent = videoDetails.snippet.title;
@@ -149,6 +146,28 @@ async function updateVideoTitles() {
             descriptionElement.textContent = 'YouTube Video';
         }
     }
+}
+
+// Sort portfolio videos by highest view count
+async function sortPortfolioVideosByViews() {
+    const workGrid = document.querySelector('.work-grid');
+    const workItems = Array.from(workGrid.querySelectorAll('.work-item'));
+    // Fetch view counts for all videos
+    const videoData = await Promise.all(workItems.map(async (item) => {
+        const videoUrl = item.href;
+        const details = await fetchVideoDetails(videoUrl);
+        let viewCount = 0;
+        if (details && details.statistics && details.statistics.viewCount) {
+            viewCount = parseInt(details.statistics.viewCount, 10);
+        }
+        return { item, viewCount };
+    }));
+    // Sort by view count descending
+    videoData.sort((a, b) => b.viewCount - a.viewCount);
+    // Remove all current items
+    workItems.forEach(item => workGrid.removeChild(item));
+    // Re-append in sorted order
+    videoData.forEach(({ item }) => workGrid.appendChild(item));
 }
 
 // Fetch and update YouTube subscriber counts in real time
@@ -194,7 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initSubscriberCounts();
     
     // Update video titles
-    updateVideoTitles();
+    updateVideoTitles().then(() => {
+        sortPortfolioVideosByViews();
+    });
     
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
