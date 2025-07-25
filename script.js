@@ -154,6 +154,43 @@ async function updateVideoTitles() {
     }
 }
 
+// Fetch and update YouTube subscriber counts in real time
+async function fetchAndUpdateSubscriberCounts() {
+    const subscriberElements = document.querySelectorAll('.subscriber-count[data-channel-id]');
+    if (!subscriberElements.length) return;
+    const ids = Array.from(subscriberElements).map(el => el.getAttribute('data-channel-id')).filter(Boolean);
+    if (!ids.length) return;
+
+    // YouTube API allows up to 50 ids per request
+    const batchSize = 50;
+    for (let i = 0; i < ids.length; i += batchSize) {
+        const batchIds = ids.slice(i, i + batchSize);
+        try {
+            const response = await fetch(`${YOUTUBE_API_URL}/channels?part=statistics&id=${batchIds.join(',')}&key=${YOUTUBE_API_KEY}`);
+            if (!response.ok) throw new Error('Failed to fetch subscriber counts');
+            const data = await response.json();
+            if (!data.items) continue;
+            data.items.forEach(item => {
+                const channelId = item.id;
+                const subs = parseInt(item.statistics.subscriberCount, 10);
+                const formatted = formatNumber(subs) + ' SUBS';
+                // Find all elements with this channelId (in case of duplicates)
+                document.querySelectorAll(`.subscriber-count[data-channel-id="${channelId}"]`).forEach(el => {
+                    el.textContent = formatted;
+                });
+            });
+        } catch (err) {
+            console.error('Error updating subscriber counts:', err);
+        }
+    }
+}
+
+// Call on DOMContentLoaded and every 5 minutes
+function startSubscriberCountUpdates() {
+    fetchAndUpdateSubscriberCounts();
+    setInterval(fetchAndUpdateSubscriberCounts, 5 * 60 * 1000);
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize subscriber count animations
@@ -255,4 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.background = `radial-gradient(ellipse at ${x}% ${y}%, #3b0a33 0%, #6e2a3a 60%, #ffd95a 100%)`;
         }, 30);
     })();
+
+    startSubscriberCountUpdates();
 }); 
